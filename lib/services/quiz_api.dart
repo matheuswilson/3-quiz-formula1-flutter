@@ -6,7 +6,7 @@ import 'package:quiz_covid19/models/question.dart';
 class QuizApi {
   static Future<List<Question>> fetch() async {
     try {
-      var url = 'https://script.google.com/macros/s/AKfycbxI628yjt1RNE9ENfMs7QLRdZwUylRwUbdFwFSaMMvQtR01rfs/exec';
+      var url = 'https://script.googleusercontent.com/macros/echo?user_content_key=0qVhvwMfuV5sKxas2d_Npvcp1t1j1N6SHrSP11maahZ96Cy6vbEaVzO1R_ZoHrRi4JjQsTfyo8AFk9LnQE44mJDFV8g36eUFm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnMbn7OXLoJNeNlW5sBPVzod3gZJ13_i3ItdYRsY2hgDGtThNBCyGoWMji4Wb7bJpbEW-dnclfdIe&lib=MAJRSRMMBFPnAjjGxXR585EZq0LVqQhBG';
       var response = await http.get(url);
 
       if (response.statusCode == 200) {

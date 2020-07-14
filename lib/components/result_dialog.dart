@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quiz_covid19/models/question.dart';
+import 'package:vector_math/vector_math.dart' as math;
 
 class ResultDialog {
   static Future show(
@@ -8,11 +10,17 @@ class ResultDialog {
     @required bool correct,
     @required Function onNext,
   }) {
-    return showDialog<void>(
+    return showGeneralDialog<void>(
       context: context,
+      pageBuilder: (context, anim1, anim2) {},
       barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
+      barrierColor: Colors.black.withOpacity(0.4),
+      barrierLabel: '',
+
+      transitionBuilder: (context, anim1, anim2, child) {
+      return Transform.rotate(
+        angle: math.radians(anim1.value * 360),
+        child: AlertDialog(
           backgroundColor: Colors.grey.shade900,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
@@ -21,8 +29,8 @@ class ResultDialog {
           ),
           title: CircleAvatar(
             backgroundColor: correct ? Colors.green : Colors.red,
-            child: Icon(
-              correct ? Icons.check : Icons.close,
+            child: FaIcon(
+              correct ? FontAwesomeIcons.smileBeam : FontAwesomeIcons.frown,
               color: Colors.grey.shade900,
             ),
           ),
@@ -64,8 +72,8 @@ class ResultDialog {
               },
             )
           ],
-        );
-      },
-    );
-  }
+        ),
+      );},
+      transitionDuration: Duration(milliseconds: 300));
+    }
 }

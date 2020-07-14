@@ -1,10 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:quiz_covid19/components/answer_button.dart';
 import 'package:quiz_covid19/components/centered_circular_progress.dart';
 import 'package:quiz_covid19/components/centered_message.dart';
 import 'package:quiz_covid19/components/finish_dialog.dart';
+import 'package:quiz_covid19/components/question_builder.dart';
 import 'package:quiz_covid19/components/result_dialog.dart';
 import 'package:quiz_covid19/controllers/quiz_controller.dart';
+
+import '../models/question.dart';
 
 class QuizPage extends StatefulWidget {
   @override
@@ -36,7 +41,8 @@ class _QuizPageState extends State<QuizPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey.shade900,
-        title: Text('QUIZ COVID-19 ( ${_scoreKeeper.length}/${_controller.questionsNumber} )'),
+        title: Text(
+            'QUIZ TWD ( ${_scoreKeeper.length}/${_controller.questionsNumber} )'),
         centerTitle: true,
         elevation: 0.0,
       ),
@@ -56,37 +62,20 @@ class _QuizPageState extends State<QuizPage> {
     if (_controller.questionsNumber == 0)
       return CenteredMessage(
         'Sem questões',
-        icon: Icons.warning,
+        icon: FontAwesomeIcons.exclamationTriangle,
       );
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        _buildQuestion(_controller.getQuestion()),
+        QuestionBuilder(_controller.getQuestion()),
+        //AnswerButton(_controller.getAnswer1()),
+        //AnswerButton(_controller.getAnswer2()),
         _buildAnswerButton(_controller.getAnswer1()),
         _buildAnswerButton(_controller.getAnswer2()),
         _buildScoreKeeper(),
       ],
-    );
-  }
-
-  _buildQuestion(String question) {
-    return Expanded(
-      flex: 5,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
-        child: Center(
-          child: Text(
-            question,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 25.0,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -122,8 +111,10 @@ class _QuizPageState extends State<QuizPage> {
               onNext: () {
                 setState(() {
                   _scoreKeeper.add(
-                    Icon(
-                      correct ? Icons.check : Icons.close,
+                    FaIcon(
+                      correct
+                          ? FontAwesomeIcons.checkCircle
+                          : FontAwesomeIcons.timesCircle,
                       color: correct ? Colors.green : Colors.red,
                     ),
                   );
@@ -131,11 +122,9 @@ class _QuizPageState extends State<QuizPage> {
                   if (_scoreKeeper.length < _controller.questionsNumber) {
                     _controller.nextQuestion();
                   } else {
-                    FinishDialog.show(
-                      context,
-                      hitNumber: _controller.hitNumber,
-                      questionNumber:  _controller.questionsNumber
-                    );
+                    FinishDialog.show(context,
+                        hitNumber: _controller.hitNumber,
+                        questionNumber: _controller.questionsNumber);
                   }
                 });
               },
@@ -148,9 +137,14 @@ class _QuizPageState extends State<QuizPage> {
 
   _buildScoreKeeper() {
     return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _scoreKeeper,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _scoreKeeper,
+          ),
+        ],
       ),
     );
   }

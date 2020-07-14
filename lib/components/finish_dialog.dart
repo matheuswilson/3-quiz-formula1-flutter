@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quiz_covid19/pages/quiz_page.dart';
 import 'package:share/share.dart';
+import 'package:vector_math/vector_math.dart' as math;
 
 class FinishDialog {
   static Future show(
@@ -9,11 +11,17 @@ class FinishDialog {
     @required int hitNumber,
     @required int questionNumber,
   }) {
-    return showDialog<void>(
+    return showGeneralDialog<void>(
       context: context,
+      pageBuilder: (context, anim1, anim2) {},
       barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
+      barrierColor: Colors.black.withOpacity(0.4),
+      barrierLabel: '',
+
+      transitionBuilder: (context, anim1, anim2, child) {
+      return Transform.rotate(
+        angle: math.radians(anim1.value * 360),
+        child: AlertDialog(
           backgroundColor: Colors.grey.shade900,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
@@ -24,7 +32,7 @@ class FinishDialog {
             backgroundColor: Colors.green,
             maxRadius: 35.0,
             child: Icon(
-              hitNumber < 6 ? Icons.warning : Icons.favorite,
+              hitNumber < 6 ? FontAwesomeIcons.exclamationTriangle : FontAwesomeIcons.smileBeam,
               color: Colors.grey.shade900,
             ),
           ),
@@ -80,8 +88,8 @@ class FinishDialog {
               },
             )
           ],
-        );
-      },
-    );
-  }
+        ),
+        );},
+      transitionDuration: Duration(milliseconds: 300));
+    }
 }
